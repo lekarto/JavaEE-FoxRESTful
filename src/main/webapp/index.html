@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <title>FoxREST API</title>
+</head>
+<body>
+    <div class="wrapper">
+        <H1 class="header">
+            FoxRESTful specification
+        </h1>
+        <div class="content">
+            The service has 2 entities:
+            <div class="entity">
+                <h3>Employee</h3>
+                <span class="description">Describes the employee of the abstract company</span>
+                <span class="fields">
+                    <span class="field">
+                        <span class="name">id</span>
+                        <span class="type">Integer</span>
+                        <span class="description">Unique key of the employee</span>
+                    </span>
+                    <span class="field">
+                        <span class="name">firstName</span>
+                        <span class="type">String</span>
+                        <span class="description">First name of the employee</span>
+                    </span>
+                    <span class="field">
+                        <span class="name">lastName</span>
+                        <span class="type">String</span>
+                        <span class="description">Last name of the employee</span>
+                    </span>
+                    <span class="field">
+                        <span class="name">salary</span>
+                        <span class="type">Integer</span>
+                        <span class="description">Salary of the employee</span>
+                    </span>
+                    <span class="field">
+                        <span class="name">sex</span>
+                        <span class="type">String</span>
+                        <span class="description">Gender</span>
+                    </span>
+                    <span class="field">
+                        <span class="name">department</span>
+                        <span class="type">String</span>
+                        <span class="description">Department name where the employee works</span>
+                    </span>
+                </span>
+            </div>
+
+            <div class="entity">
+                <h3>Department</h3>
+                <span class="description">Describes the department of the abstract company</span>
+                <span class="fields">
+                    <span class="field">
+                        <span class="name">id</span>
+                        <span class="type">Integer</span>
+                        <span class="description">Unique key of the department</span>
+                    </span>
+                    <span class="field">
+                        <span class="name">name</span>
+                        <span class="type">String</span>
+                        <span class="description">Name of the department</span>
+                    </span>
+                    <span class="field">
+                        <span class="name">averageSalary</span>
+                        <span class="type">Float</span>
+                        <span class="description">Average salary of the current department</span>
+                    </span>
+                    <span class="field">
+                        <span class="name">employeeCount</span>
+                        <span class="type">Integer</span>
+                        <span class="description">The number of staff</span>
+                    </span>
+                </span>
+            </div>
+            <H2>API</H2>
+            Base link for all requests: <span class="bold">/foxrestful/rest</span>
+            <div class="api">
+                <h3>Employee</h3>
+                <table>
+                    <thead>
+                        <th>link</th>
+                        <th>Method</th>
+                        <th>Example of the body for request</th>
+                        <th>Effect</th>
+                        <th>HTTP response header codes</th>
+                        <th>HTTP response body</th>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>/employees</td>
+                        <td>GET</td>
+                        <td>-</td>
+                        <td>Get all employees</td>
+                        <td>200 - OK</td>
+                        <td>
+                            [{"id":1,"firstName":"Sergey",<br/>
+                            "lastName":"Fedorov","sex":true,<br/>
+                            "salary":100.0,"department":"Developers"},<br/>
+                            {"id":3,"firstName":"Иван",<br/>
+                            "lastName":"Демидов","sex":true,<br/>
+                            "salary":140.0,"department"::"QA"}]
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>/employees/5</td>
+                        <td>GET</td>
+                        <td>-</td>
+                        <td>Get employee with id = 5</td>
+                        <td>
+                            200 - OK<br/>
+                            204 - No data
+                        </td>
+                        <td>
+                            {"id":5,"firstName":"Chun",<br/>
+                            "lastName":"Nguen","sex":false,<br/>
+                            "salary":120.0,"department":"QA"}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>/employees&sex=f</td>
+                        <td>GET</td>
+                        <td>-</td>
+                        <td>Get filtered employees (in this case only women)</td>
+                        <td>
+                            200 - OK<br/>
+                            204 - No data<br />
+                            400 - Wrong filter parameter
+                        </td>
+                        <td>
+                            [{"id":4,"firstName":"Angelina",<br/>
+                            "lastName":"Feofilaktova","sex":<br />
+                            false,"salary":160.0,"department":"Managers"},<br />
+                            {"id":5,"firstName":"Chun",<br />
+                            "lastName":"阮","sex":false,<br />
+                            "salary":180.0,"department":"Managers"}]
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>/employees</td>
+                        <td>POST</td>
+                        <td>
+                            JSON-representation of the object. <b>Example:</b><br />
+                            {"firstName":"Alena","lastName":"Kazakevich",<br/>
+                             "sex":false,"salary":5000.0,<br/>
+                             "department":"QA"}
+                        </td>
+                        <td>Create new employee</td>
+                        <td>
+                            201 - Created success
+                        </td>
+                        <td>
+                            Employee saved id: 10
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>/employees/6</td>
+                        <td>PUT</td>
+                        <td>
+                            JSON-representation of the new fields. <b>Example:</b><br>
+                            {"salary":5500.0}
+                        </td>
+                        <td>Update exist employee</td>
+                        <td>
+                            400 - No data in body<br />
+                            200 - Updated success<br />
+                            415 - Wrong format of data
+                        </td>
+                        <td>
+                            Updated employee id: 6
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>/employees/6</td>
+                        <td>DELETE</td>
+                        <td>-</td>
+                        <td>Delete exist employee</td>
+                        <td>
+                            201 - Deleted success<br />
+                            404 - Employee not found
+                        </td>
+                        <td>
+                            Employee deleted id: 6
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="api">
+                <h3>Department </h3>
+                <table>
+                    <thead>
+                    <th>link</th>
+                    <th>Method</th>
+                    <th>Example of the body for request</th>
+                    <th>Effect</th>
+                    <th>HTTP response header codes</th>
+                    <th>HTTP response body</th>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>/departments</td>
+                        <td>GET</td>
+                        <td>-</td>
+                        <td>Get all departments</td>
+                        <td>200 - OK</td>
+                        <td>
+                            [{"id":1,"name":"Developers","averageSalary":<br />
+                            110.0,"employeeCount":2},{"id":2,"name":"QA",<br />
+                            "averageSalary":140.0,"employeeCount":1}]
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>/departments/4</td>
+                        <td>GET</td>
+                        <td>-</td>
+                        <td>Get department with id = 4</td>
+                        <td>
+                            200 - OK<br/>
+                            204 - No data
+                        </td>
+                        <td>
+                            {"id":4,"name":"Support","averageSalary":0.0,<br />
+                            "employeeCount":0}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>/departments</td>
+                        <td>POST</td>
+                        <td>
+                            JSON-representation of the object. <b>Example:</b><br />
+                            {"name":"Consultants"}
+                        </td>
+                        <td>Create new department</td>
+                        <td>
+                            201 - Created success
+                        </td>
+                        <td>
+                            Department saved id: 5
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>/departments/5</td>
+                        <td>PUT</td>
+                        <td>
+                            JSON-representation of the new fields. <b>Example:</b><br>
+                            {"name":"Leads"}
+                        </td>
+                        <td>Update exist department</td>
+                        <td>
+                            400 - No data in body<br />
+                            200 - Updated success<br />
+                            415 - Wrong format of data
+                        </td>
+                        <td>
+                            Updated department id: 5
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>/departments/5</td>
+                        <td>DELETE</td>
+                        <td>-</td>
+                        <td>Delete exist department</td>
+                        <td>
+                            201 - Deleted success<br />
+                            404 - Employee not found
+                        </td>
+                        <td>
+                            Department deleted id: 6
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="footer">
+            FoxRESTful service. 2015.
+        </div>
+    </div>
+</body>
+</html>
