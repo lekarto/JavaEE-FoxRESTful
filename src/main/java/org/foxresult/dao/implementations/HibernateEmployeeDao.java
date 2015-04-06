@@ -7,12 +7,13 @@ import org.foxresult.entity.filter.EmployeeFilter;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Component;
 
-import java.sql.SQLException;
 import java.util.List;
 
+@Component
 public class HibernateEmployeeDao extends AbstractDao<Employee, Integer> implements EmployeeDao {
-    
+
     public Class<Employee> getClassType() {
         return Employee.class;
     }
@@ -25,7 +26,7 @@ public class HibernateEmployeeDao extends AbstractDao<Employee, Integer> impleme
         List<Employee> employees = null;
         Session session = null;
         try {
-            session = HibernateDaoFactory.getSessionFactory().openSession();
+            session = sessionFactory.openSession();
             Criteria dbRequest = session.createCriteria(Employee.class);
             if ((filter.department != null) && !filter.department.equals("")) {
                 dbRequest.add(Restrictions.like("department.name", filter.department));
@@ -40,7 +41,7 @@ public class HibernateEmployeeDao extends AbstractDao<Employee, Integer> impleme
                 dbRequest.add(Restrictions.le("salary", filter.maxSalary));
             }
             employees = dbRequest.list();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         } finally {
@@ -54,7 +55,7 @@ public class HibernateEmployeeDao extends AbstractDao<Employee, Integer> impleme
         if (depID == null) return false;
         Session session = null;
         try {
-            session = HibernateDaoFactory.getSessionFactory().openSession();
+            session = sessionFactory.openSession();
             List<Employee> employees = session.createCriteria(Employee.class).
                             add(Restrictions.eq("department.id", depID)).list();
             for (Employee emp : employees) {
@@ -63,7 +64,7 @@ public class HibernateEmployeeDao extends AbstractDao<Employee, Integer> impleme
                 if (!update(emp))
                     return false;
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         } finally {

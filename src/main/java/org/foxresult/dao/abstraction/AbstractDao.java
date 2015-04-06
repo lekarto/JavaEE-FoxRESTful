@@ -1,26 +1,32 @@
 package org.foxresult.dao.abstraction;
 
-import org.foxresult.dao.implementations.HibernateDaoFactory;
 import org.foxresult.dao.interfaces.GenericDao;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.List;
-import java.util.ResourceBundle;
+
 
 public abstract class AbstractDao<T, PK extends Serializable> implements GenericDao<T, PK> {
-    
+
+    @Autowired
+    protected SessionFactory sessionFactory;
+
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
     public boolean persist(T object) {
         Session session = null;
         try {
-            session = HibernateDaoFactory.getSessionFactory().openSession();
+            session = sessionFactory.openSession();
             session.beginTransaction();
             session.save(object);
             session.getTransaction().commit();
-        } catch (SQLException sql) {
+        } catch (Exception sql) {
             session.getTransaction().rollback();
             sql.printStackTrace();
             return false;
@@ -35,10 +41,10 @@ public abstract class AbstractDao<T, PK extends Serializable> implements Generic
         Session session = null;
         if (key != null)
             try {
-                session = HibernateDaoFactory.getSessionFactory().openSession();
+                session = sessionFactory.openSession();
                 session.clear();
                 entry = (T) session.get(getClassType(), key);
-            } catch (SQLException sql) {
+            } catch (Exception sql) {
                 sql.printStackTrace();
             } finally {
                 closeSession(session);
@@ -51,11 +57,11 @@ public abstract class AbstractDao<T, PK extends Serializable> implements Generic
         if (object != null) {
             Session session = null;
             try {
-                session = HibernateDaoFactory.getSessionFactory().openSession();
+                session = sessionFactory.openSession();
                 session.beginTransaction();
                 session.delete(object);
                 session.getTransaction().commit();
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 session.getTransaction().rollback();
                 e.printStackTrace();
                 return false;
@@ -71,7 +77,7 @@ public abstract class AbstractDao<T, PK extends Serializable> implements Generic
     public boolean setAll(List<T> objects) {
         Session session = null;
         try {
-            session = HibernateDaoFactory.getSessionFactory().openSession();
+            session = sessionFactory.openSession();
             for (T object : objects) {
                 if (!persist(object)) {
                     throw new Exception("Can't save to DB employee");
@@ -90,11 +96,11 @@ public abstract class AbstractDao<T, PK extends Serializable> implements Generic
         List<T> result = null;
         Session session = null;
         try {
-            session = HibernateDaoFactory.getSessionFactory().openSession();
+            session = sessionFactory.openSession();
             session.clear();
             result = session.createCriteria(getClassType()).
                         addOrder(Order.asc("id")).list();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             closeSession(session);
@@ -107,14 +113,14 @@ public abstract class AbstractDao<T, PK extends Serializable> implements Generic
         if (getObject != null) {
             Session session = null;
             try {
-                session = HibernateDaoFactory.getSessionFactory().openSession();
+                session = sessionFactory.openSession();
                 session.beginTransaction();
                 session.update(object);
 
                 session.getTransaction().commit();
                 session.close();
                 return true;
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 return false;
             } finally {

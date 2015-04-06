@@ -4,13 +4,13 @@ import org.foxresult.dao.abstraction.AbstractDao;
 import org.foxresult.dao.interfaces.DepartmentDao;
 import org.foxresult.entity.Department;
 import org.hibernate.Session;
-import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Component;
 
-import java.sql.SQLException;
 import java.util.List;
 
+@Component
 public class HibernateDepartmentDao extends AbstractDao<Department, Integer> implements DepartmentDao {
 
     public Class<Department> getClassType() {
@@ -28,11 +28,11 @@ public class HibernateDepartmentDao extends AbstractDao<Department, Integer> imp
         if ((name == null) || name.equals(""))
             return null;
         try {
-            session = HibernateDaoFactory.getSessionFactory().openSession();
+            session = sessionFactory.openSession();
             department = (Department)session.createCriteria(Department.class).
                                              add(Restrictions.eq("name", name)).
                                              uniqueResult();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         } finally {
@@ -46,10 +46,10 @@ public class HibernateDepartmentDao extends AbstractDao<Department, Integer> imp
         List<String> depNames = null;
         Session session = null;
         try {
-            session = HibernateDaoFactory.getSessionFactory().openSession();
+            session = sessionFactory.openSession();
             depNames = session.createCriteria(Department.class).
                                setProjection(Projections.property("name")).list();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         } finally {
