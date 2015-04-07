@@ -23,22 +23,22 @@
     <bean id="sessionFactory"
           class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
         <property name="dataSource" ref="dataSource" />
-        <property name="annotatedClasses">
-            <list>
-                <value>org.foxresult.entity.Department</value>
-                <value>org.foxresult.entity.Employee</value>
-            </list>
-        </property>
-        <property name="hibernateProperties">
-            <props>
-                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
-                <prop key="hibernate.current_session_context_class">thread</prop>
-                <prop key="cache.provider_class">org.hibernate.cache.internal.NoCachingRegionFactory</prop>
-                <prop key="hibernate.cache.default_cache_concurrency_strategy">transactional</prop>
-                <prop key="hibernate.show_sql">true</prop>
-                <prop key="hbm2ddl.auto">create</prop>
-            </props>
-        </property>
+        <property name="configLocation" value="classpath:hibernate.cfg.xml" />
+        <!--<property name="annotatedPackages">-->
+            <!--<list>-->
+                <!--<value>org.foxresult.entity</value>-->
+            <!--</list>-->
+        <!--</property>-->
+        <!--<property name="hibernateProperties">-->
+            <!--<props>-->
+                <!--<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>-->
+                <!--<prop key="hibernate.current_session_context_class">thread</prop>-->
+                <!--<prop key="cache.provider_class">org.hibernate.cache.internal.NoCachingRegionFactory</prop>-->
+                <!--<prop key="hibernate.cache.default_cache_concurrency_strategy">transactional</prop>-->
+                <!--<prop key="hibernate.show_sql">true</prop>-->
+                <!--<prop key="hbm2ddl.auto">create</prop>-->
+            <!--</props>-->
+        <!--</property>-->
     </bean>
 
     <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
