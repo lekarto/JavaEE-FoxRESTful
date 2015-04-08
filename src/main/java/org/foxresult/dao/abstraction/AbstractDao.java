@@ -15,10 +15,6 @@ public abstract class AbstractDao<T, PK extends Serializable> implements Generic
     @Autowired
     protected SessionFactory sessionFactory;
 
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
-
     public boolean persist(T object) {
         Session session = null;
         try {

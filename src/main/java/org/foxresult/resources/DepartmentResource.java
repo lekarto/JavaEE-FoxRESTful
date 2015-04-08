@@ -1,8 +1,11 @@
 package org.foxresult.resources;
 
-import org.foxresult.dao.implementations.HibernateDaoFactory;
+import org.foxresult.dao.interfaces.DepartmentDao;
+import org.foxresult.dao.interfaces.EmployeeDao;
 import org.foxresult.entity.Department;
 import org.foxresult.entity.wrapper.DepartmentWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -10,33 +13,39 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 @Path("/departments")
 public class DepartmentResource {
+
+    @Autowired
+    protected DepartmentDao departmentDao;
+    @Autowired
+    protected EmployeeDao employeeDao;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<DepartmentWrapper> getAll() {
-        return wrap(HibernateDaoFactory.getDepartmentDao().getAll());
+        return wrap(departmentDao.getAll());
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}")
     public DepartmentWrapper get(@PathParam("id") int id) {
-        return wrap(HibernateDaoFactory.getDepartmentDao().getByPK(id));
+        return wrap(departmentDao.getByPK(id));
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/names")
     public List<String> getDepartmentsNames() {
-        return HibernateDaoFactory.getDepartmentDao().getDepartmentsName();
+        return departmentDao.getDepartmentsName();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response create(DepartmentWrapper dw) {
-        if (HibernateDaoFactory.getDepartmentDao().persist(unwrap(dw))) {
+        if (departmentDao.persist(unwrap(dw))) {
             String result = "Department saved id: " + dw.getId();
             return Response.status(201).entity(result).build();
         } else {
@@ -56,7 +65,7 @@ public class DepartmentResource {
             department.setId(id);
         }
         if ((id == department.getId()) &&
-                HibernateDaoFactory.getDepartmentDao().update(unwrap(department))) {
+                departmentDao.update(unwrap(department))) {
             String result = "Updated department id: " + department.getId();
             return Response.status(200).entity(result).build();
         } else {
@@ -68,8 +77,8 @@ public class DepartmentResource {
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") int id) {
-        if ((HibernateDaoFactory.getEmployeeDao().dismissEmployeesFromDepartment(id)) &&
-                (HibernateDaoFactory.getDepartmentDao().deleteByPK(id))) {
+        if ((employeeDao.dismissEmployeesFromDepartment(id)) &&
+                (departmentDao.deleteByPK(id))) {
             String result = "Department deleted id: " + id;
             return Response.status(201).entity(result).build();
         } else {

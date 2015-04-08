@@ -1,18 +1,27 @@
 package org.foxresult.resources;
 
-import org.foxresult.dao.implementations.HibernateDaoFactory;
+import org.foxresult.dao.interfaces.DepartmentDao;
+import org.foxresult.dao.interfaces.EmployeeDao;
 import org.foxresult.entity.Department;
 import org.foxresult.entity.Employee;
 import org.foxresult.entity.wrapper.EmployeeWrapper;
 import org.foxresult.entity.filter.EmployeeFilter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 @Path("/employees")
 public class EmployeeResource {
+
+    @Autowired
+    protected EmployeeDao employeeDao;
+    @Autowired
+    protected DepartmentDao departmentDao;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -21,7 +30,7 @@ public class EmployeeResource {
         if (queryParams.size() > 0) {
             return getFilteredEmployees(queryParams);
         } else {
-            return  Response.ok(wrap(HibernateDaoFactory.getEmployeeDao().getAll())).build();
+            return  Response.ok(wrap(employeeDao.getAll())).build();
         }
     }
 
@@ -29,13 +38,13 @@ public class EmployeeResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}")
     public EmployeeWrapper get(@PathParam("id") int id) {
-        return wrap(HibernateDaoFactory.getEmployeeDao().getByPK(id));
+        return wrap(employeeDao.getByPK(id));
     }
     
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response create(EmployeeWrapper employee) {
-        HibernateDaoFactory.getEmployeeDao().persist(unwrap(employee));
+        employeeDao.persist(unwrap(employee));
         String result = "Employee saved id: " + employee.getId();
         return Response.status(201).entity(result).build();
     }
@@ -51,7 +60,7 @@ public class EmployeeResource {
             employee.setId(id);
         }
         if (id == employee.getId()) {
-            if (HibernateDaoFactory.getEmployeeDao().update(unwrap(employee))) {
+            if (employeeDao.update(unwrap(employee))) {
                 String result = "Updated employee id: " + employee.getId();
                 return Response.status(200).entity(result).build();
             } else {
@@ -66,7 +75,7 @@ public class EmployeeResource {
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") int id) {
-        if (HibernateDaoFactory.getEmployeeDao().deleteByPK(id)) {
+        if (employeeDao.deleteByPK(id)) {
             String result = "Employee deleted id: " + id;
             return Response.status(201).entity(result).build();
         } else {
@@ -96,7 +105,7 @@ public class EmployeeResource {
         if (!filter.parseMaxSalary(maxSalary)) {
             return Response.status(400).entity("Parameter '" + EmployeeFilter.MAX_SALARY + "' not valid").build();
         }
-        return Response.ok(wrap(HibernateDaoFactory.getEmployeeDao().getFilteredEmployees(filter))).build();
+        return Response.ok(wrap(employeeDao.getFilteredEmployees(filter))).build();
     }
 
     private EmployeeWrapper wrap(Employee emp) {
@@ -117,7 +126,7 @@ public class EmployeeResource {
         if (ew == null) return null;
         Department dep = null;
         if ( (ew.getDepartment() != null)) {
-            dep = HibernateDaoFactory.getDepartmentDao().getDepartmentByName(ew.getDepartment());
+            dep = departmentDao.getDepartmentByName(ew.getDepartment());
         }
         return new Employee(ew.getId(), ew.getFirstName(), ew.getLastName(),
                             ew.getSex(), ew.getSalary(), dep);

@@ -6,16 +6,16 @@ import org.foxresult.entity.Department;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
 public class HibernateDepartmentDao extends AbstractDao<Department, Integer> implements DepartmentDao {
 
     public Class<Department> getClassType() {
         return Department.class;
     }
+
+    public HibernateDepartmentDao() {  }
 
     public Integer getPK(Department object) {
         return object.getId();
