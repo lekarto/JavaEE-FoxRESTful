@@ -1,6 +1,5 @@
 package org.foxresult.entity.wrapper;
 
-import org.foxresult.entity.Department;
 import org.foxresult.entity.Employee;
 
 public class EmployeeWrapper {
