@@ -48,6 +48,7 @@
                 <configuration>
                     <source>${jdk.version}</source>
                     <target>${jdk.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
 
@@ -66,8 +67,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.18.1</version>
+                <version>2.16</version>
                 <configuration>
+                    <junitArtifactName>junit:junit</junitArtifactName>
+                    <skipTests>true</skipTests>
+                    <enconding>${project.build.sourceEncoding}</enconding>
+                    <inputEncoding>${project.build.sourceEncoding}</inputEncoding>
+                    <outputEncoding>${project.build.sourceEncoding}</outputEncoding>
                     <argLine>-Dfile.encoding=UTF-8</argLine>
                 </configuration>
             </plugin>
@@ -181,6 +187,26 @@
                     <artifactId>spring-aop</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <!-- Test -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.186</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

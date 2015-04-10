@@ -1,0 +1,2 @@
+INSERT INTO `departments` (`name`) VALUES ('Developers'), ('QA'), ('Managers'), ('Support'), ('Test');
+INSERT INTO `employees` (`first_name`, `last_name`, `salary`, `sex`, `department_id`) VALUES ('Sergey', 'Fedorov', '100', 1, '1'), ('Иван', 'Демидов', '120', 1, '1'), ('الحسيب', 'عبد', '140', 1, '2'), ('Angelina', 'Feofilaktova', '160', 0, '3'), ('湧', '阮', '180', 0, '3'), ('Test', 'Ivanovna', '180', 0, NULL);
