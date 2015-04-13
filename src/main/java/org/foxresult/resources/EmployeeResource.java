@@ -44,9 +44,16 @@ public class EmployeeResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response create(EmployeeWrapper employee) {
-        employeeDao.persist(unwrap(employee));
-        String result = "Employee saved id: " + employee.getId();
-        return Response.status(201).entity(result).build();
+        Employee emp = unwrap(employee);
+        if ((emp != null) &&
+                (emp.getFirstName()!=null) && (emp.getLastName()!=null) &&
+                employeeDao.persist(emp)) {
+            String result = "Employee saved id: " + emp.getId();
+            return Response.status(201).entity(result).build();
+        } else {
+            String result = "Server error";
+            return Response.status(500).entity(result).build();
+        }
     }
 
     @PUT
