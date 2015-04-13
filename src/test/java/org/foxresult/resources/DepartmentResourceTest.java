@@ -1,16 +1,11 @@
 package org.foxresult.resources;
 
-import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.spi.spring.container.servlet.SpringServlet;
 import com.sun.jersey.test.framework.AppDescriptor;
 import com.sun.jersey.test.framework.JerseyTest;
 import com.sun.jersey.test.framework.WebAppDescriptor;
-import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
@@ -35,6 +30,7 @@ public class DepartmentResourceTest extends JerseyTest {
     private static int RESPONSE_STATUS_OK = 200;
     private static int RESPONSE_STATUS_CREATED = 201;
     private static int RESPONSE_STATUS_NO_DATA = 204;
+    private static int RESPONSE_STATUS_BAD_REQUEST = 400;
     private static int RESPONSE_STATUS_NOT_FOUND = 404;
     private static int RESPONSE_STATUS_NOT_ALLOWED = 405;
     private static int RESPONSE_STATUS_UNSUPPORTED_MEDIA_TYPE = 415;
@@ -186,6 +182,16 @@ public class DepartmentResourceTest extends JerseyTest {
                 put(ClientResponse.class, mapper.writeValueAsString(dep));
         Assert.assertNotNull(response);
         Assert.assertTrue(response.getStatus() == RESPONSE_STATUS_UNSUPPORTED_MEDIA_TYPE &&
+                response.hasEntity());
+    }
+
+    @Test
+    public void updateNullTest() throws IOException {
+        WebResource webResource = resource().path("/departments/5");
+        ClientResponse response = webResource.type(MediaType.APPLICATION_JSON).
+                put(ClientResponse.class, mapper.writeValueAsString(null));
+        Assert.assertNotNull(response);
+        Assert.assertTrue(response.getStatus() == RESPONSE_STATUS_BAD_REQUEST &&
                 response.hasEntity());
     }
 
