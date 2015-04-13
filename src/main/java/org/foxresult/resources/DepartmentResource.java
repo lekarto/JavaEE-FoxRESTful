@@ -45,8 +45,9 @@ public class DepartmentResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response create(DepartmentWrapper dw) {
-        if (departmentDao.persist(unwrap(dw))) {
-            String result = "Department saved id: " + dw.getId();
+        Department dep = unwrap(dw);
+        if ((dep.getName() != null) && departmentDao.persist(dep)) {
+            String result = "Department saved id: " + dep.getId();
             return Response.status(201).entity(result).build();
         } else {
             String result = "Server error";
