@@ -1,5 +1,6 @@
 package org.foxresult.dao.implementations;
 
+import org.apache.log4j.Logger;
 import org.foxresult.dao.abstraction.AbstractDao;
 import org.foxresult.dao.interfaces.EmployeeDao;
 import org.foxresult.entity.Employee;
@@ -14,8 +15,15 @@ import java.util.List;
 @Component
 public class HibernateEmployeeDao extends AbstractDao<Employee, Integer> implements EmployeeDao {
 
-    public Class<Employee> getClassType() {
+    final static Logger logger = Logger.getLogger(HibernateEmployeeDao.class);
+
+    public Class<Employee> getEntityClassType() {
         return Employee.class;
+    }
+
+    @Override
+    public Logger getLogger() {
+        return logger;
     }
 
     public Integer getPK(Employee object) {
@@ -42,7 +50,7 @@ public class HibernateEmployeeDao extends AbstractDao<Employee, Integer> impleme
             }
             employees = dbRequest.list();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("getFilteredEmployees exception!", e);
             return null;
         } finally {
             closeSession(session);
@@ -65,7 +73,7 @@ public class HibernateEmployeeDao extends AbstractDao<Employee, Integer> impleme
                     return false;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("dismissEmployeesFromDepartment exception!", e);
             return false;
         } finally {
             closeSession(session);

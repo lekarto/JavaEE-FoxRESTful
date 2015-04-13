@@ -24,7 +24,7 @@ public abstract class AbstractDao<T, PK extends Serializable> implements Generic
             session.getTransaction().commit();
         } catch (Exception sql) {
             session.getTransaction().rollback();
-            sql.printStackTrace();
+            getLogger().error("persist exception!", sql);
             return false;
         } finally {
             closeSession(session);
@@ -39,9 +39,9 @@ public abstract class AbstractDao<T, PK extends Serializable> implements Generic
             try {
                 session = sessionFactory.openSession();
                 session.clear();
-                entry = (T) session.get(getClassType(), key);
+                entry = (T) session.get(getEntityClassType(), key);
             } catch (Exception sql) {
-                sql.printStackTrace();
+                getLogger().error("getByPK exception!", sql);
             } finally {
                 closeSession(session);
             }
@@ -59,7 +59,7 @@ public abstract class AbstractDao<T, PK extends Serializable> implements Generic
                 session.getTransaction().commit();
             } catch (Exception e) {
                 session.getTransaction().rollback();
-                e.printStackTrace();
+                getLogger().error("deleteByPK exception!", e);
                 return false;
             } finally {
                 closeSession(session);
@@ -80,7 +80,7 @@ public abstract class AbstractDao<T, PK extends Serializable> implements Generic
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            getLogger().error("setAll exception!", e);
             return false;
         } finally {
             closeSession(session);
@@ -89,15 +89,16 @@ public abstract class AbstractDao<T, PK extends Serializable> implements Generic
     }
 
     public List<T> getAll() {
+        getLogger().debug("debug test! getAll");
         List<T> result = null;
         Session session = null;
         try {
             session = sessionFactory.openSession();
             session.clear();
-            result = session.createCriteria(getClassType()).
+            result = session.createCriteria(getEntityClassType()).
                         addOrder(Order.asc("id")).list();
         } catch (Exception e) {
-            e.printStackTrace();
+            getLogger().error("getAll exception!", e);
         } finally {
             closeSession(session);
         }
@@ -112,12 +113,11 @@ public abstract class AbstractDao<T, PK extends Serializable> implements Generic
                 session = sessionFactory.openSession();
                 session.beginTransaction();
                 session.update(object);
-
                 session.getTransaction().commit();
                 session.close();
                 return true;
             } catch (Exception e) {
-                e.printStackTrace();
+                getLogger().error("update exception!", e);
                 return false;
             } finally {
                 closeSession(session);

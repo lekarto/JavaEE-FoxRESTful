@@ -1,5 +1,6 @@
 package org.foxresult.dao.implementations;
 
+import org.apache.log4j.Logger;
 import org.foxresult.dao.abstraction.AbstractDao;
 import org.foxresult.dao.interfaces.DepartmentDao;
 import org.foxresult.entity.Department;
@@ -11,8 +12,15 @@ import java.util.List;
 
 public class HibernateDepartmentDao extends AbstractDao<Department, Integer> implements DepartmentDao {
 
-    public Class<Department> getClassType() {
+    final static Logger logger = Logger.getLogger(HibernateDepartmentDao.class);
+
+    public Class<Department> getEntityClassType() {
         return Department.class;
+    }
+
+    @Override
+    public Logger getLogger() {
+        return logger;
     }
 
     public HibernateDepartmentDao() {  }
@@ -33,7 +41,7 @@ public class HibernateDepartmentDao extends AbstractDao<Department, Integer> imp
                                              add(Restrictions.eq("name", name)).
                                              uniqueResult();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("getDepartmentByName exception!", e);
             return null;
         } finally {
             closeSession(session);
@@ -50,7 +58,7 @@ public class HibernateDepartmentDao extends AbstractDao<Department, Integer> imp
             depNames = session.createCriteria(Department.class).
                                setProjection(Projections.property("name")).list();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("getDepartmentsName exception!", e);
             return null;
         } finally {
             closeSession(session);
