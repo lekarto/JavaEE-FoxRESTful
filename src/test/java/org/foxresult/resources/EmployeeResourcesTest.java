@@ -10,6 +10,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.foxresult.entity.Employee;
+import resources.HTTPStatus;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,15 +28,6 @@ public class EmployeeResourcesTest extends JerseyTest {
 
     private String EMPLOYEE_FIRST_NAME = "Oland";
     private String EMPLOYEE_LAST_NAME = "Pfapfer";
-
-    private static int RESPONSE_STATUS_OK = 200;
-    private static int RESPONSE_STATUS_CREATED = 201;
-    private static int RESPONSE_STATUS_NO_DATA = 204;
-    private static int RESPONSE_STATUS_BAD_REQUEST = 400;
-    private static int RESPONSE_STATUS_NOT_FOUND = 404;
-    private static int RESPONSE_STATUS_NOT_ALLOWED = 405;
-    private static int RESPONSE_STATUS_UNSUPPORTED_MEDIA_TYPE = 415;
-    private static int RESPONSE_STATUS_SERVER_ERROR = 500;
 
     private ObjectMapper mapper = new ObjectMapper();
 
@@ -57,7 +49,7 @@ public class EmployeeResourcesTest extends JerseyTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .get(ClientResponse.class);
         Assert.assertNotNull(response);
-        Assert.assertTrue((response.getStatus() == RESPONSE_STATUS_OK) &&
+        Assert.assertTrue((response.getStatus() == HTTPStatus.RESPONSE_STATUS_OK) &&
                 response.hasEntity());
         try {
             JSONArray jsonArray = new JSONArray(response.getEntity(String.class));
@@ -74,7 +66,7 @@ public class EmployeeResourcesTest extends JerseyTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .delete(ClientResponse.class);
         Assert.assertNotNull(response);
-        Assert.assertTrue(response.getStatus() == RESPONSE_STATUS_NOT_ALLOWED);
+        Assert.assertTrue(response.getStatus() == HTTPStatus.RESPONSE_STATUS_NOT_ALLOWED);
     }
 
     @Test
@@ -84,7 +76,7 @@ public class EmployeeResourcesTest extends JerseyTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .get(ClientResponse.class);
         Assert.assertNotNull(response);
-        Assert.assertTrue((response.getStatus() == RESPONSE_STATUS_OK) &&
+        Assert.assertTrue((response.getStatus() == HTTPStatus.RESPONSE_STATUS_OK) &&
                 response.hasEntity());
         try {
             JSONObject jsonObject = new JSONObject(response.getEntity(String.class));
@@ -106,7 +98,7 @@ public class EmployeeResourcesTest extends JerseyTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .get(ClientResponse.class);
         Assert.assertNotNull(response);
-        Assert.assertTrue(response.getStatus() == RESPONSE_STATUS_NO_DATA);
+        Assert.assertTrue(response.getStatus() == HTTPStatus.RESPONSE_STATUS_NO_DATA);
     }
 
     @Test
@@ -116,7 +108,7 @@ public class EmployeeResourcesTest extends JerseyTest {
         ClientResponse response = webResource.type(MediaType.APPLICATION_JSON).
                 post(ClientResponse.class, mapper.writeValueAsString(emp));
         Assert.assertNotNull(response);
-        Assert.assertTrue(response.getStatus() == RESPONSE_STATUS_CREATED &&
+        Assert.assertTrue(response.getStatus() == HTTPStatus.RESPONSE_STATUS_CREATED &&
                 response.hasEntity());
         String answer = response.getEntity(String.class);
         Assert.assertTrue(answer.matches("Employee saved id: [\\d]"));
@@ -129,7 +121,7 @@ public class EmployeeResourcesTest extends JerseyTest {
         ClientResponse response = webResource.type(MediaType.APPLICATION_JSON).
                 post(ClientResponse.class, mapper.writeValueAsString(emp));
         Assert.assertNotNull(response);
-        Assert.assertTrue(response.getStatus() == RESPONSE_STATUS_SERVER_ERROR &&
+        Assert.assertTrue(response.getStatus() == HTTPStatus.RESPONSE_STATUS_SERVER_ERROR &&
                 response.hasEntity());
         String answer = response.getEntity(String.class);
         Assert.assertTrue(answer.matches("Server error"));
@@ -145,7 +137,7 @@ public class EmployeeResourcesTest extends JerseyTest {
         ClientResponse response = webResource.type(MediaType.APPLICATION_JSON).
                 put(ClientResponse.class, mapper.writeValueAsString(emp));
         Assert.assertNotNull(response);
-        Assert.assertTrue(response.getStatus() == RESPONSE_STATUS_OK);
+        Assert.assertTrue(response.getStatus() == HTTPStatus.RESPONSE_STATUS_OK);
     }
 
     @Test
@@ -155,7 +147,7 @@ public class EmployeeResourcesTest extends JerseyTest {
         ClientResponse response = webResource.type(MediaType.APPLICATION_JSON).
                 put(ClientResponse.class, mapper.writeValueAsString(emp));
         Assert.assertNotNull(response);
-        Assert.assertTrue(response.getStatus() == RESPONSE_STATUS_UNSUPPORTED_MEDIA_TYPE &&
+        Assert.assertTrue(response.getStatus() == HTTPStatus.RESPONSE_STATUS_UNSUPPORTED_MEDIA_TYPE &&
                 response.hasEntity());
     }
 
@@ -165,7 +157,7 @@ public class EmployeeResourcesTest extends JerseyTest {
         ClientResponse response = webResource.type(MediaType.APPLICATION_JSON).
                 put(ClientResponse.class, mapper.writeValueAsString(null));
         Assert.assertNotNull(response);
-        Assert.assertTrue(response.getStatus() == RESPONSE_STATUS_BAD_REQUEST &&
+        Assert.assertTrue(response.getStatus() == HTTPStatus.RESPONSE_STATUS_BAD_REQUEST &&
                 response.hasEntity());
     }
 
@@ -178,12 +170,12 @@ public class EmployeeResourcesTest extends JerseyTest {
         ClientResponse response = webResource.type(MediaType.APPLICATION_JSON).
                 delete(ClientResponse.class);
         Assert.assertNotNull(response);
-        Assert.assertTrue(response.getStatus() == RESPONSE_STATUS_CREATED);
+        Assert.assertTrue(response.getStatus() == HTTPStatus.RESPONSE_STATUS_CREATED);
 
         response = webResource.type(MediaType.APPLICATION_JSON).
                 delete(ClientResponse.class);
         Assert.assertNotNull(response);
-        Assert.assertTrue(response.getStatus() == RESPONSE_STATUS_NOT_FOUND);
+        Assert.assertTrue(response.getStatus() == HTTPStatus.RESPONSE_STATUS_NOT_FOUND);
     }
 
     private int create(Employee emp) throws IOException {
@@ -192,7 +184,7 @@ public class EmployeeResourcesTest extends JerseyTest {
         ClientResponse response = webResource.type(MediaType.APPLICATION_JSON).
                 post(ClientResponse.class, mapper.writeValueAsString(emp));
         Assert.assertNotNull(response);
-        Assert.assertTrue(response.getStatus() == RESPONSE_STATUS_CREATED &&
+        Assert.assertTrue(response.getStatus() == HTTPStatus.RESPONSE_STATUS_CREATED &&
                 response.hasEntity());
         String answer = response.getEntity(String.class);
         return Integer.valueOf(answer.replace("Employee saved id: ", ""));
