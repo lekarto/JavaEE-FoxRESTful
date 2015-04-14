@@ -8,6 +8,9 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.List;
 
+/**
+ * Department class describes a specific branch of the company
+ */
 @Entity
 @Table(name = "departments")
 public class Department {
@@ -22,7 +25,12 @@ public class Department {
     private List<Employee> employees;
     
     public Department() {}
-    
+
+    /**
+     *
+     * @param id      Set Department ID
+     * @param name    Set Department name
+     */
     public Department(Integer id, String name) {
         this.id = id;
         this.name = name;

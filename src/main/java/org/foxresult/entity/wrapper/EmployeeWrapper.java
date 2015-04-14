@@ -2,6 +2,11 @@ package org.foxresult.entity.wrapper;
 
 import org.foxresult.entity.Employee;
 
+/**
+ * Wrapper for Employee class.
+ * This class uses to communicate with the customer
+ * @see org.foxresult.entity.Employee
+ */
 public class EmployeeWrapper {
 
     private Integer id;

@@ -10,11 +10,24 @@ import java.io.Serializable;
 import java.util.List;
 
 
+/**
+ * Abstract class for DAO entries
+ * Consist standard CRUD operations
+ * Implements Generic DAO interface
+ * @param <T>
+ * @param <PK>
+ * @see org.foxresult.dao.interfaces.GenericDao
+ */
 public abstract class AbstractDao<T, PK extends Serializable> implements GenericDao<T, PK> {
 
     @Autowired
     protected SessionFactory sessionFactory;
 
+    /**
+     * Create a new record in the DB
+     * @param object    Entity which must be stored
+     * @return          True if entity was successfully created in the DB otherwise false
+     */
     public boolean persist(T object) {
         Session session = null;
         try {
@@ -32,6 +45,12 @@ public abstract class AbstractDao<T, PK extends Serializable> implements Generic
         return true;
     }
 
+    /**
+     * Get entity T from DB by private key.
+     * @param key    Private key of entity which will need to read from DB
+     * @return       T class if entity was found in DB, null if DB if requested entity was not found.
+     *               If key is null will be returned null.
+     */
     public T getByPK(PK key) {
         T entry = null;
         Session session = null;
@@ -48,6 +67,12 @@ public abstract class AbstractDao<T, PK extends Serializable> implements Generic
         return entry;
     }
 
+    /**
+     * Delete an object from the database that has an id.
+     * @param id    ID identifier for row which need delete.
+     * @return      True if delete was successful.
+     *              If key is null will be returned null.
+     */
     public boolean deleteByPK(PK id) {
         T object = getByPK(id);
         if (object != null) {
@@ -70,6 +95,12 @@ public abstract class AbstractDao<T, PK extends Serializable> implements Generic
         }
     }
 
+    /**
+     * Create new entries in DB from List of entities
+     * @param objects   List of entries
+     * @return          True if all entries was created otherwise false.
+     *                  If objects is null will be returned null.
+     */
     public boolean setAll(List<T> objects) {
         Session session = null;
         try {
@@ -88,6 +119,10 @@ public abstract class AbstractDao<T, PK extends Serializable> implements Generic
         return true;
     }
 
+    /**
+     * Get all entities from DB.
+     * @return  List of entities.
+     */
     public List<T> getAll() {
         getLogger().debug("debug test! getAll");
         List<T> result = null;
@@ -105,6 +140,12 @@ public abstract class AbstractDao<T, PK extends Serializable> implements Generic
         return result;
     }
 
+    /**
+     * Update existing Entity
+     * @param object    Entity for updating
+     * @return          True if entity was updated, otherwise false.
+     *                  if object is null will be return null.
+     */
     public boolean update(T object) {
         T getObject = getByPK(getPK(object));
         if (getObject != null) {

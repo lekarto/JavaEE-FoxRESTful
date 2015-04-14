@@ -4,6 +4,9 @@ import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+/**
+ * Employee class describes a specific person
+ */
 @Entity
 @Table(name = "employees")
 public class Employee {
@@ -29,7 +32,16 @@ public class Employee {
     public static boolean MALE = true;
 
     public Employee() {}
-    
+
+    /**
+     * Constructor of Employee class
+     * @param firstName     Set first name of Employee
+     * @param lastName      Set last name of Employee
+     * @param sex           Set gender of Employee. 1 is male, 0 is female
+     * @param salary        Set salary of the Employee
+     * @param department    Set link to Department object where is Employee works
+     * @see org.foxresult.entity.Department
+     */
     public Employee(String firstName, String lastName,
                     boolean sex, Float salary, Department department) {
         this.firstName = firstName;
@@ -39,6 +51,13 @@ public class Employee {
         this.department = department;
     }
 
+    /**
+     * Constructor of Employee class
+     * @param firstName     Set first name of Employee
+     * @param lastName      Set last name of Employee
+     * @param sex           Set gender of Employee. 1 is male, 0 is female
+     * @param salary        Set salary of the Employee*
+     */
     public Employee(String firstName, String lastName,
                     boolean sex, Float salary) {
         this.firstName = firstName;
@@ -46,7 +65,17 @@ public class Employee {
         this.sex = sex;
         this.salary = salary;
     }
-    
+
+    /**
+     * Constructor of Employee class
+     * @param id            Set id of the Employee
+     * @param firstName     Set first name of Employee
+     * @param lastName      Set last name of Employee
+     * @param sex           Set gender of Employee. 1 is male, 0 is female
+     * @param salary        Set salary of the Employee
+     * @param department    Set link to Department object where is Employee works
+     * @see org.foxresult.entity.Department
+     */
     public Employee(Integer id, String firstName, String lastName,
                     boolean sex, Float salary, Department department) {
         this.id = id;

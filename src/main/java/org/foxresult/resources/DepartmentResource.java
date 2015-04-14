@@ -13,6 +13,10 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * REST service for get or set info about Departments
+ * Client will get data in JSON format
+ */
 @Component
 @Path("/departments")
 public class DepartmentResource {
@@ -22,12 +26,23 @@ public class DepartmentResource {
     @Autowired
     protected EmployeeDao employeeDao;
 
+    /**
+     * Get all Departments
+     * @return  List of all departments.
+     * @see org.foxresult.entity.wrapper.DepartmentWrapper
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<DepartmentWrapper> getAll() {
         return wrap(departmentDao.getAll());
     }
 
+    /**
+     * Get Department by id
+     * @param id    Needed Department ID
+     * @return      Department info
+     * @see org.foxresult.entity.wrapper.DepartmentWrapper
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}")
@@ -35,6 +50,10 @@ public class DepartmentResource {
         return wrap(departmentDao.getByPK(id));
     }
 
+    /**
+     * Get all Department names
+     * @return  List of the department names
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/names")
@@ -42,6 +61,12 @@ public class DepartmentResource {
         return departmentDao.getDepartmentsName();
     }
 
+    /**
+     * Create new Department
+     * @param dw    Department info
+     * @return      HTTP status 201 if Department was created otherwise HTTP status 500
+     * @see org.foxresult.entity.wrapper.DepartmentWrapper
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response create(DepartmentWrapper dw) {
@@ -55,6 +80,15 @@ public class DepartmentResource {
         }
     }
 
+    /**
+     * Update existing Department
+     * @param department    New department info
+     * @param id            Department ID which need to be updated
+     * @return              HTTP status 400 if request body is null.
+     *                      HTTP status 415 if request ID and Department ID is not equal
+     *                      HTTP 200 if department was updated
+     * @see org.foxresult.entity.wrapper.DepartmentWrapper
+     */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{id}")
@@ -75,6 +109,13 @@ public class DepartmentResource {
         }
     }
 
+    /**
+     * Delete existing Department
+     * @param id            Department ID which need to be deleted
+     * @return              HTTP status 404 if department with specified ID was not found
+     *                      HTTP 200 if department was deleted
+     * @see org.foxresult.entity.wrapper.DepartmentWrapper
+     */
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") int id) {

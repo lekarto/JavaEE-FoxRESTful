@@ -2,6 +2,14 @@ package org.foxresult.entity.filter;
 
 import org.foxresult.entity.Employee;
 
+/**
+ * Employee filter class for DB requests. Can be used next filers:
+ * - by gender
+ * - by department
+ * - by min, max salary and those combination
+ * @see org.foxresult.entity.Department
+ * @see org.foxresult.entity.Employee
+ */
 public class EmployeeFilter {
     public static String DEPARTMENT = "dep";
     public String department = null;

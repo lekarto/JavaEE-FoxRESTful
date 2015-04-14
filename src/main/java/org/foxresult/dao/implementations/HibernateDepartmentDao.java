@@ -14,10 +14,20 @@ public class HibernateDepartmentDao extends AbstractDao<Department, Integer> imp
 
     final static Logger logger = Logger.getLogger(HibernateDepartmentDao.class);
 
+    /**
+     * Returns Department class
+     * @return Department class: Department.class
+     * @see org.foxresult.entity.Department
+     */
     public Class<Department> getEntityClassType() {
         return Department.class;
     }
 
+    /**
+     * Get logger
+     * @return Returns logger object
+     * @see org.apache.log4j.Logger
+     */
     @Override
     public Logger getLogger() {
         return logger;
@@ -25,10 +35,22 @@ public class HibernateDepartmentDao extends AbstractDao<Department, Integer> imp
 
     public HibernateDepartmentDao() {  }
 
+    /**
+     * Returns Department private key
+     * @param object    Department class
+     * @return          Private key of the entity
+     * @see org.foxresult.entity.Department
+     */
     public Integer getPK(Department object) {
         return object.getId();
     }
 
+    /**
+     * Get Department entry from DB by it's name
+     * @param name    Name of the department
+     * @return        Department object if was found department with selected name
+     * @see org.foxresult.entity.Department
+     */
     @Override
     public Department getDepartmentByName(String name) {
         Department department = null;
@@ -49,6 +71,10 @@ public class HibernateDepartmentDao extends AbstractDao<Department, Integer> imp
         return department;
     }
 
+    /**
+     * Get all names of departments
+     * @return  List of all department names
+     */
     @Override
     public List<String> getDepartmentsName() {
         List<String> depNames = null;

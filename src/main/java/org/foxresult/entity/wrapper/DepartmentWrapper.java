@@ -4,6 +4,11 @@ import org.foxresult.entity.Department;
 import org.foxresult.entity.Employee;
 import org.hibernate.Hibernate;
 
+/**
+ * Wrapper for Department class.
+ * This class uses to communicate with the customer
+ * @see org.foxresult.entity.Department
+ */
 public class DepartmentWrapper {
     private Integer id;
     private String name;

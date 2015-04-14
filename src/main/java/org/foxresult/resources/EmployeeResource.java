@@ -14,6 +14,9 @@ import javax.ws.rs.core.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * REST service for get or set info about Employees
+ */
 @Component
 @Path("/employees")
 public class EmployeeResource {
@@ -23,6 +26,11 @@ public class EmployeeResource {
     @Autowired
     protected DepartmentDao departmentDao;
 
+    /**
+     * Get all Employees
+     * @return  List of all employees.
+     * @see org.foxresult.entity.wrapper.EmployeeWrapper
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAll(@Context UriInfo uriInfo) {
@@ -34,13 +42,25 @@ public class EmployeeResource {
         }
     }
 
+    /**
+     * Get Employee by id
+     * @param id    Needed Employee ID
+     * @return      Employee info
+     * @see org.foxresult.entity.wrapper.EmployeeWrapper
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}")
     public EmployeeWrapper get(@PathParam("id") int id) {
         return wrap(employeeDao.getByPK(id));
     }
-    
+
+    /**
+     * Create new Department
+     * @param employee    Employee info
+     * @return            HTTP status 201 if Employee was created otherwise HTTP status 500
+     * @see org.foxresult.entity.wrapper.EmployeeWrapper
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response create(EmployeeWrapper employee) {
@@ -56,6 +76,15 @@ public class EmployeeResource {
         }
     }
 
+    /**
+     * Update existing Employee
+     * @param employee    New employee info
+     * @param id          Employee ID which need to be updated
+     * @return            HTTP status 400 if request body is null.
+     *                    HTTP status 415 if request ID and Employee ID is not equal
+     *                    HTTP 200 if department was updated
+     * @see org.foxresult.entity.wrapper.EmployeeWrapper
+     */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{id}")
@@ -79,6 +108,13 @@ public class EmployeeResource {
         }
     }
 
+    /**
+     * Delete existing Employee
+     * @param id            Employee ID which need to be deleted
+     * @return              HTTP status 404 if employee with specified ID was not found
+     *                      HTTP 200 if department was deleted
+     * @see org.foxresult.entity.wrapper.EmployeeWrapper
+     */
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") int id) {

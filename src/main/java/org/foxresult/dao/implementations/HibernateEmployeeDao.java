@@ -17,19 +17,43 @@ public class HibernateEmployeeDao extends AbstractDao<Employee, Integer> impleme
 
     final static Logger logger = Logger.getLogger(HibernateEmployeeDao.class);
 
+    /**
+     * Returns Employee DAO class.
+     * @return Entity classtype: T.class
+     * @see org.foxresult.entity.Employee
+     */
     public Class<Employee> getEntityClassType() {
         return Employee.class;
     }
 
+    /**
+     * Get logger
+     * @return Returns logger object
+     * @see org.apache.log4j.Logger
+     */
     @Override
     public Logger getLogger() {
         return logger;
     }
 
+    /**
+     * Returns Employee private key
+     * @param object    Employee class
+     * @return          Private key of the entity
+     * @see org.foxresult.entity.Employee
+     */
     public Integer getPK(Employee object) {
         return object.getId();
     }
-    
+
+    /**
+     * Get filtered list of employees
+     * @param filter    Filter for specify needed users
+     * @return          Filtered list of employees
+     *                  If filter is null will be return null
+     * @see org.foxresult.entity.filter.EmployeeFilter
+     * @see org.foxresult.entity.Employee
+     */
     public List<Employee> getFilteredEmployees(EmployeeFilter filter) {
         List<Employee> employees = null;
         Session session = null;
@@ -58,6 +82,12 @@ public class HibernateEmployeeDao extends AbstractDao<Employee, Integer> impleme
         return employees;
     }
 
+    /**
+     * Dismiss all Employees from specified department
+     * @param depID    Department ID from which you want to lay off employees
+     * @return         True if all employees was dismissed otherwise false
+     *                 If depID is null will be return null.
+     */
     @Override
     public boolean dismissEmployeesFromDepartment(Integer depID) {
         if (depID == null) return false;
