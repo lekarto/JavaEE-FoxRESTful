@@ -55,6 +55,8 @@ public class HibernateEmployeeDao extends AbstractDao<Employee, Integer> impleme
      * @see org.foxresult.entity.Employee
      */
     public List<Employee> getFilteredEmployees(EmployeeFilter filter) {
+        if (filter == null)
+            return null;
         List<Employee> employees = null;
         Session session = null;
         try {

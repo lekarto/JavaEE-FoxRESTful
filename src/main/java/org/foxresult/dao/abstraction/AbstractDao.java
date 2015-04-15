@@ -102,9 +102,7 @@ public abstract class AbstractDao<T, PK extends Serializable> implements Generic
      *                  If objects is null will be returned null.
      */
     public boolean setAll(List<T> objects) {
-        Session session = null;
         try {
-            session = sessionFactory.openSession();
             for (T object : objects) {
                 if (!persist(object)) {
                     throw new Exception("Can't save to DB employee");
@@ -113,8 +111,6 @@ public abstract class AbstractDao<T, PK extends Serializable> implements Generic
         } catch (Exception e) {
             getLogger().error("setAll exception!", e);
             return false;
-        } finally {
-            closeSession(session);
         }
         return true;
     }
@@ -124,7 +120,6 @@ public abstract class AbstractDao<T, PK extends Serializable> implements Generic
      * @return  List of entities.
      */
     public List<T> getAll() {
-        getLogger().debug("debug test! getAll");
         List<T> result = null;
         Session session = null;
         try {

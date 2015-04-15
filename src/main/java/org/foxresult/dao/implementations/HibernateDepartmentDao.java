@@ -53,10 +53,11 @@ public class HibernateDepartmentDao extends AbstractDao<Department, Integer> imp
      */
     @Override
     public Department getDepartmentByName(String name) {
+        if ((name == null) || name.equals("")) {
+            return null;
+        }
         Department department = null;
         Session session = null;
-        if ((name == null) || name.equals(""))
-            return null;
         try {
             session = sessionFactory.openSession();
             department = (Department)session.createCriteria(Department.class).
