@@ -6,6 +6,7 @@ import org.hibernate.annotations.*;
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,10 +35,11 @@ public class Department {
     public Department(Integer id, String name) {
         this.id = id;
         this.name = name;
+        this.employees = new ArrayList<>();
     }
 
     public Department(String name) {
-        this.name = name;
+        this(null, name);
     }
     
     public Integer getId() {

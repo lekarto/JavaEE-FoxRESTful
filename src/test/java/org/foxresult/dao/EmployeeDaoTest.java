@@ -1,6 +1,8 @@
 package org.foxresult.dao;
 
+import org.foxresult.dao.interfaces.DepartmentDao;
 import org.foxresult.dao.interfaces.EmployeeDao;
+import org.foxresult.entity.Department;
 import org.foxresult.entity.Employee;
 import org.foxresult.entity.filter.EmployeeFilter;
 import org.junit.Assert;
@@ -21,6 +23,8 @@ public class EmployeeDaoTest {
     
     @Autowired
     EmployeeDao employeeDao;
+    @Autowired
+    DepartmentDao departmentDao;
 
     @Before
     public void testContext() {
@@ -77,5 +81,49 @@ public class EmployeeDaoTest {
         Assert.assertNotNull(emps);
         int count = emps.size();
         Assert.assertTrue(count > 0);
+    }
+
+    @Test
+    public void getFilteredEmployeeTest() {
+        float min_salary = 110f;
+        float max_salary = 140f;
+        EmployeeFilter ef = new EmployeeFilter();
+        ef.sex = Employee.MALE;
+        ef.minSalary = min_salary;
+        ef.maxSalary = max_salary;
+        List<Employee> employees = employeeDao.getFilteredEmployees(ef);
+        Assert.assertNotNull(employees);
+        for (Employee employee : employees) {
+            Assert.assertTrue((employee.getSex() == Employee.MALE) &&
+                    (employee.getSalary() >= min_salary) &&
+                    (employee.getSalary() <= max_salary));
+        }
+
+        employees = employeeDao.getFilteredEmployees(null);
+        Assert.assertNull(employees);
+    }
+
+    @Test
+    public void dismissEmployeesFromDepartment() {
+        Assert.assertEquals(employeeDao.dismissEmployeesFromDepartment(null), false);
+
+        Department dep = new Department("Unique Marlin");
+        Employee emp1 = new Employee("FName1", "LName1", Employee.FEMALE, 400f, dep);
+        Employee emp2 = new Employee("FName2", "LName2", Employee.FEMALE, 450f, dep);
+        dep.getEmployees().add(emp1);
+        dep.getEmployees().add(emp2);
+        departmentDao.persist(dep);
+        employeeDao.persist(emp1);
+        employeeDao.persist(emp2);
+
+        employeeDao.dismissEmployeesFromDepartment(dep.getId());
+
+        Employee emp1_get = employeeDao.getByPK(emp1.getId());
+        Assert.assertNull(emp1_get.getDepartment());
+        Employee emp2_get = employeeDao.getByPK(emp2.getId());
+        Assert.assertNull(emp2_get.getDepartment());
+
+        Department dep_get = departmentDao.getByPK(dep.getId());
+        Assert.assertTrue((dep_get == null) || (dep_get.getEmployees().size() == 0));
     }
 }
